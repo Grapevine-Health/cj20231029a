@@ -1,11 +1,11 @@
 import azure.functions as func
 import logging
 
-from blueprint import blueprint
+# from blueprint import blueprint
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-app.register_functions(blueprint)
+# app.register_functions(blueprint)
 
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
