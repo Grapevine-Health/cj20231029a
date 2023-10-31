@@ -7,8 +7,8 @@ from http3 import text_string
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-app.register_blueprint(blueprint)
-app.register_blueprint(http3)
+app.register_functions(blueprint)
+app.register_functions(http3)
 
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
