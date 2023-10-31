@@ -32,4 +32,4 @@ def http_trigger3(req: func.HttpRequest) -> func.HttpResponse:
         )
     
 def text_string():
-    return 'text_string'
+    return 'text string'
