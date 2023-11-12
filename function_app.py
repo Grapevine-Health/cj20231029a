@@ -2,6 +2,8 @@ import azure.functions as func
 import logging
 
 from blueprint import blueprint
+from db import db_bp
+from timer_function import timer_bp
 from http3 import http3
 from http3 import text_string
 
@@ -9,6 +11,8 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 app.register_functions(blueprint)
 app.register_functions(http3)
+app.register_functions(db_bp)
+app.register_functions(timer_bp)
 
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:

@@ -6,13 +6,16 @@
 
 
 import azure.functions as func
+from azure.cosmos import CosmosClient
 import logging
 import os
+import datetime
+import uuid
 
 blueprint = func.Blueprint()
 
 
-@blueprint.route(route="blueprint, auth_level=func.AuthLevel.FUNCTION")
+@blueprint.route(route="blueprint")
 def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -27,8 +30,24 @@ def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
 
     if name:
         env = os.getenv('TEST1')
+
+        id = uuid.uuid4().hex
+
+        datetime_obj = datetime.datetime.now()
+        datetime_str = datetime_obj.strftime('%Y%M%d_%H%M%S')
+        data_to_log = {'id': id, 'name': name, 'datetime': datetime_str}
+
+        cosmosdb_connection_str = os.environ["cosmosdb_connection_str"]
+        client = CosmosClient.from_connection_string(cosmosdb_connection_str)
+        database_id = os.environ["database_id"]
+        database = client.get_database_client(database_id)
+        collection_name = os.environ["collection1_id"]
+        container_client = database.get_container_client(collection_name)
+        new_log_item = container_client.create_item(body=data_to_log)
+
         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully. Env var {env}")
     else:
+        # Return
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
