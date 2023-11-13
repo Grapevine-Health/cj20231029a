@@ -12,6 +12,12 @@ import os
 import datetime
 import uuid
 
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string=os.getenv('AI_CONNECTION_STRING')))
+logger.setLevel(logging.INFO)
+
 blueprint = func.Blueprint()
 
 
@@ -43,6 +49,7 @@ def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
         database = client.get_database_client(database_id)
         collection_name = os.environ["collection1_id"]
         container_client = database.get_container_client(collection_name)
+        logger.info(f"Adding data {data_to_log} to DB")
         new_log_item = container_client.create_item(body=data_to_log)
 
         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully. Env var {env}")
