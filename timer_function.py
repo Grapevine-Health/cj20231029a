@@ -7,6 +7,7 @@
 import azure.functions as func
 import datetime
 import logging
+import os
 
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 
