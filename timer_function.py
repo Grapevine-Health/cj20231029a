@@ -8,16 +8,21 @@ import azure.functions as func
 import datetime
 import logging
 
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string=os.getenv('AI_CONNECTION_STRING')))
+logger.setLevel(logging.INFO)
 timer_bp = func.Blueprint()
 
 
-@timer_bp.timer_trigger(schedule="0 * * * * *", arg_name="myTimer", run_on_startup=True,
+@timer_bp.timer_trigger(schedule="0 0 * * * *", arg_name="myTimer", run_on_startup=True,
               use_monitor=False) 
 def timer_trigger(myTimer: func.TimerRequest) -> None:
     if myTimer.past_due:
         logging.info('The timer is past due!')
 
     datetime_obj = datetime.datetime.now()
-    datetime_str = datetime_obj.strftime('%Y%M%d_%H%M%S')
+    datetime_str = datetime_obj.strftime('%Y%m%d_%H%M%S')
 
-    logging.info(f"Python timer trigger function executed at time {datetime_str}.")
+    logger.info(f"Python timer trigger function executed at time {datetime_str}.")

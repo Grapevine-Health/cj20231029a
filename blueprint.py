@@ -40,7 +40,7 @@ def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
         id = uuid.uuid4().hex
 
         datetime_obj = datetime.datetime.now()
-        datetime_str = datetime_obj.strftime('%Y%M%d_%H%M%S')
+        datetime_str = datetime_obj.strftime('%Y%m%d_%H%M%S')
         data_to_log = {'id': id, 'name': name, 'datetime': datetime_str}
 
         cosmosdb_connection_str = os.environ["cosmosdb_connection_str"]
