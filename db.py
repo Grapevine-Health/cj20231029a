@@ -8,6 +8,12 @@ import os
 import azure.functions as func
 import logging
 
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string=os.getenv('AI_CONNECTION_STRING')))
+logger.setLevel(logging.INFO)
+
 db_bp = func.Blueprint()
 
 @db_bp.cosmos_db_trigger(arg_name = 'docs',
@@ -18,7 +24,7 @@ db_bp = func.Blueprint()
     create_lease_container_if_not_exists=True
 )
 def db(docs: func.DocumentList) -> str:
-    logging.info('Python HTTP trigger function processed a request.')
+    logger.info('Python HTTP trigger function processed a request.')
     for doc in docs:
-        logging.info(f"{doc.data}")
+        logger.info(f"DB trigger data:{doc.data}")
     return None
