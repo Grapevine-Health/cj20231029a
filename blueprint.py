@@ -56,7 +56,7 @@ def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
         except Exception as e:
             logger.error(f"Error getting DB client {e}")
         collection_name = os.environ["collection1_id"]
-        logger.info(f"collection name {collection_name")
+        logger.info(f"collection name {collection_name}")
         try:
             container_client = database.get_container_client(collection_name)
         except Exception as e:
