@@ -52,7 +52,7 @@ def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
         logger.info(f"Adding data {data_to_log} to DB")
         try:
             new_log_item = container_client.create_item(body=data_to_log)
-        exception Exception as e:
+        except Exception as e:
             logger.error(f"Error creating DB item {e}")
 
         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully. Env var {env}")
