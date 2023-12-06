@@ -44,11 +44,23 @@ def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
         data_to_log = {'id': id, 'name': name, 'datetime': datetime_str}
 
         cosmosdb_connection_str = os.environ["cosmosdb_connection_str"]
-        client = CosmosClient.from_connection_string(cosmosdb_connection_str)
+        logger.info(f"cosmos conn str {cosmosdb_connection_str}")
+        try:
+            client = CosmosClient.from_connection_string(cosmosdb_connection_str)
+        except Exception as e:
+            logger.error(f"Error getting cosmos client {e}")
         database_id = os.environ["database_id"]
-        database = client.get_database_client(database_id)
+        logger.info(f"database_id {database_id}")
+        try:
+            database = client.get_database_client(database_id)
+        except Exception as e:
+            logger.error(f"Error getting DB client {e}")
         collection_name = os.environ["collection1_id"]
-        container_client = database.get_container_client(collection_name)
+        logger.info(f"collection name {collection_name")
+        try:
+            container_client = database.get_container_client(collection_name)
+        except Exception as e:
+            logger.error(f"Error getting container client {e}")
         logger.info(f"Adding data {data_to_log} to DB")
         try:
             new_log_item = container_client.create_item(body=data_to_log)
